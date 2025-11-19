@@ -16,6 +16,6 @@ fun AddInvestmentButton(onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        Text("Adicionar Investimento")
+        Text("Configurar Carteira")
     }
 }
