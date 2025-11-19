@@ -6,30 +6,33 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.hellokotlin.viewModel.HomeViewModel
 import com.example.hellokotlin.components.AddInvestmentButton
 import com.example.hellokotlin.components.AppFooter
 import com.example.hellokotlin.components.AppHeader
 import com.example.hellokotlin.components.InvestimentHero
-import com.example.hellokotlin.components.InvestmentItem
 
 @Composable
-fun HomeScreen() {
-    Column(modifier = Modifier) {
+fun HomeScreen(
+    onNavigateToWalletConfig: () -> Unit,
+    homeViewModel: HomeViewModel
+) {
+    val wallet = homeViewModel.walletConfig.value
+    val totalInvestido = wallet?.initialAmount ?: 0.0
+
+    Column {
 
         AppHeader("Minha carteira")
 
-        InvestimentHero(totalValue = 1000.90)
+        InvestimentHero(totalValue = totalInvestido)
 
-        Column(modifier = Modifier.weight(1f)) {
-            InvestmentItem("Tesouro Selic", 4500.00)
-            InvestmentItem("CDB Banco XP", 3000.00)
-            InvestmentItem("Fundos Imobiliários", 5000.75)
+        AddInvestmentButton {
+            onNavigateToWalletConfig()
         }
-
-        AddInvestmentButton { }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         AppFooter()
     }
 }
+
