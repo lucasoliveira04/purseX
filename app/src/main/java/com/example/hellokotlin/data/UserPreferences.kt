@@ -1,21 +1,31 @@
 package com.example.hellokotlin.data
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class UserPreferences
-    (private val context: Context)
-{
-    private val Context.dataStore by preferencesDataStore(name = "user_prefs")
+val Context.dataStore by preferencesDataStore(name = "user_prefs")
+val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
+class UserPreferences(private val context: Context) {
 
     companion object {
         val USERNAME = stringPreferencesKey("username")
         val PASSWORD = stringPreferencesKey("password")
         val CREATED_AT = stringPreferencesKey("created_at")
+    }
+
+    val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        prefs[IS_LOGGED_IN] ?: false
+    }
+
+    suspend fun setLoggedIn(value: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[IS_LOGGED_IN] = value
+        }
     }
 
     suspend fun saveUser(username: String, password: String, createdAt: String) {
@@ -36,8 +46,6 @@ class UserPreferences
         }
 
     suspend fun clear() {
-        context.dataStore.edit {
-            it.clear()
-        }
+        context.dataStore.edit { it.clear() }
     }
 }
